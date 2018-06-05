@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class SetupsController < OpenReadController
-  before_action :set_setup, only: %i[update destroy]
+class SetupsController < ProtectedController
+  before_action :set_setup, only: %i[show update destroy]
 
   # GET /setups
   # GET /setups.json
   def index
-    @setups = Setup.all
+    @setups = current_user.setups
 
     render json: @setups
   end
@@ -14,7 +14,7 @@ class SetupsController < OpenReadController
   # GET /setups/1
   # GET /setups/1.json
   def show
-    render json: Setup.find(params[:id])
+    render json: @setup
   end
 
   # POST /setups
@@ -52,7 +52,7 @@ class SetupsController < OpenReadController
   end
 
   def setup_params
-    params.require(:setup).permit(:string_gauge, :guitar_id)
+    params.require(:setup).permit(:string_gauge, :guitar_id, :string_brand, :setup_notes, :date_strings_changed, :date_of_setup)
   end
 
   private :set_setup, :setup_params

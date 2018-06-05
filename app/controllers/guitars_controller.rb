@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class GuitarsController < OpenReadController
-  before_action :set_guitar, only: %i[update destroy]
+class GuitarsController < ProtectedController
+  before_action :set_guitar, only: %i[show update destroy]
 
   # GET /guitars
   # GET /guitars.json
   def index
-    @guitars = Guitar.all
+    @guitars = current_user.guitars
 
     render json: @guitars
   end
@@ -14,7 +14,7 @@ class GuitarsController < OpenReadController
   # GET /guitars/1
   # GET /guitars/1.json
   def show
-    render json: Guitar.find(params[:id])
+    render json: @guitar
   end
 
   # POST /guitars
@@ -52,7 +52,7 @@ class GuitarsController < OpenReadController
   end
 
   def guitar_params
-    params.require(:guitar).permit(:make)
+    params.require(:guitar).permit(:make, :model, :year, :price)
   end
 
   private :set_guitar, :guitar_params
