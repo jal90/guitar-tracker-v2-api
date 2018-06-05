@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2) do
+ActiveRecord::Schema.define(version: 20180605181118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,29 @@ ActiveRecord::Schema.define(version: 2) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_examples_on_user_id"
+  end
+
+  create_table "guitars", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "make"
+    t.string "model"
+    t.integer "year"
+    t.integer "price"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_guitars_on_user_id"
+  end
+
+  create_table "setups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "string_brand"
+    t.decimal "string_gauge"
+    t.date "date_strings_changed"
+    t.date "date_of_setup"
+    t.string "setup_notes"
+    t.bigint "guitar_id"
+    t.index ["guitar_id"], name: "index_setups_on_guitar_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -34,4 +57,6 @@ ActiveRecord::Schema.define(version: 2) do
   end
 
   add_foreign_key "examples", "users"
+  add_foreign_key "guitars", "users"
+  add_foreign_key "setups", "guitars"
 end
