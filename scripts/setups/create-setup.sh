@@ -7,7 +7,7 @@ curl "http://localhost:4741/setups" \
   --header "Authorization: Token token=${TOKEN}" \
   --data '{
     "setup": {
-      "string_gauge": "'"${TEXT}"'",
+      "setup_notes": "'"${TEXT}"'",
       "guitar_id": "'"${ID}"'"
     }
   }'
