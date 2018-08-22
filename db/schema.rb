@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180820145507) do
+ActiveRecord::Schema.define(version: 20180821212323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,10 +28,6 @@ ActiveRecord::Schema.define(version: 20180820145507) do
     t.datetime "updated_at", null: false
     t.string "make"
     t.string "model"
-    t.integer "year"
-    t.integer "price"
-    t.bigint "user_id"
-    t.index ["user_id"], name: "index_guitars_on_user_id"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -51,8 +47,17 @@ ActiveRecord::Schema.define(version: 20180820145507) do
     t.date "date_strings_changed"
     t.date "date_of_setup"
     t.string "setup_notes"
-    t.bigint "guitar_id"
-    t.index ["guitar_id"], name: "index_setups_on_guitar_id"
+    t.bigint "user_guitars_id"
+    t.index ["user_guitars_id"], name: "index_setups_on_user_guitars_id"
+  end
+
+  create_table "user_guitars", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "guitar_id", null: false
+    t.integer "year"
+    t.integer "price"
+    t.index ["guitar_id"], name: "index_user_guitars_on_guitar_id"
+    t.index ["user_id"], name: "index_user_guitars_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -66,6 +71,5 @@ ActiveRecord::Schema.define(version: 20180820145507) do
   end
 
   add_foreign_key "examples", "users"
-  add_foreign_key "guitars", "users"
-  add_foreign_key "setups", "guitars"
+  add_foreign_key "setups", "user_guitars", column: "user_guitars_id"
 end
