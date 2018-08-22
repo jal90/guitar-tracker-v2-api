@@ -20,7 +20,12 @@ class GuitarsController < ProtectedController
   # POST /guitars
   # POST /guitars.json
   def create
-    @guitar = current_user.guitars.build(guitar_params)
+    # @guitar = current_user.guitars.build(guitar_params)
+
+    # Transitioning Guitars into a public resource to reduce data duplication
+    # UserGuitars table will require current_user.user_guitars.build to ensure
+    # authentication
+    @guitar = Guitar.create(guitar_params)
 
     if @guitar.save
       render json: @guitar, status: :created
@@ -52,7 +57,7 @@ class GuitarsController < ProtectedController
   end
 
   def guitar_params
-    params.require(:guitar).permit(:make, :model, :year, :price)
+    params.require(:guitar).permit(:make, :model)
   end
 
   private :set_guitar, :guitar_params

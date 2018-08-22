@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :examples, except: %i[new edit]
   resources :users, only: %i[index show update]
   resources :guitars, except: %i[new edit]
+  resources :user_guitars, except: %i[new edit]
   resources :setups, except: %i[new edit]
 
 
