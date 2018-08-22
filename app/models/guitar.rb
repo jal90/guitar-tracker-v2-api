@@ -1,6 +1,6 @@
 class Guitar < ApplicationRecord
-  has_many :users, through: :user_guitars
   has_many :user_guitars
+  has_many :users, through: :user_guitars
 
   include PgSearch
   pg_search_scope :whose_attrs_start_with, against: %i[make model year],
