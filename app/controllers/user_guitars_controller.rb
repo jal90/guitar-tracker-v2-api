@@ -23,15 +23,13 @@ class UserGuitarsController < ProtectedController
     # @user_guitar = current_user.user_guitars.build(user_guitar_params)
     puts 'PARAMS ARE ', user_guitar_params
 
-    @guitar = Guitar.first_or_initialize(guitar_params)
+    @guitar = Guitar.where(make: guitar_params['make'], model: guitar_params['model'])
+                    .first_or_initialize(guitar_params)
     if @guitar.new_record?
       @guitar.save
     end
 
     @user_guitar = UserGuitar.create(guitar: @guitar, user: current_user, year: user_guitar_params['year'], price: user_guitar_params['price'])
-    # BUG: guitar_id for created guitars is 1, even when it shouldn't be
-    # BUG: and this is true whether the guitar already exists in the database or whether
-    # BUG: it's a new record
 
     if @user_guitar.save
       render json: @user_guitar, status: :created
