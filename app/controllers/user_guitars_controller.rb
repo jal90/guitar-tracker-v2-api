@@ -20,19 +20,29 @@ class UserGuitarsController < ProtectedController
   # POST /user_guitars
   # POST /user_guitars.json
   def create
-    @guitar = Guitar.where(make: guitar_params['make'], model: guitar_params['model'])
-                    .first_or_create(guitar_params)
+    # binding.pry
+    @guitar = Guitar.where(make: guitar_params['make'],
+                           model: guitar_params['model'])
+                    .first_or_initialize(guitar_params)
 
-    # Next 2 lines are seemingly equivalent. Tested with CURL scripts, both block access to
-    # Guitars and UserGuitars not created by the user who created them.
-    @user_guitar = UserGuitar.create(guitar: @guitar, user: current_user, year: user_guitar_params['year'], price: user_guitar_params['price'])
-    # @user_guitar = current_user.user_guitars.build(guitar: @guitar, user: current_user, year: user_guitar_params['year'], price: user_guitar_params['price'])
+    if @guitar.save
+      render json: @guitar, status: :created
 
-    if @user_guitar.save
-      render json: @user_guitar, status: :created
+      @user_guitar = current_user.user_guitars.build(guitar: @guitar,
+                                                     user: current_user,
+                                                     year: user_guitar_params['year'],
+                                                     price: user_guitar_params['price'])
+
+      if @user_guitar.save
+        render json: @user_guitar, status: :created
+      else
+        render json: @user_guitar.errors, status: :unprocessable_entity
+      end
     else
-      render json: @user_guitar.errors, status: :unprocessable_entity
+      render json: @guitar.errors, status: :unprocessable_entity
     end
+
+
   end
 
   # PATCH/PUT /user_guitars/1
