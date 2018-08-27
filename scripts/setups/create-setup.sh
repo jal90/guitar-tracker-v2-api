@@ -8,7 +8,7 @@ curl "http://localhost:4741/setups" \
   --data '{
     "setup": {
       "setup_notes": "'"${TEXT}"'",
-      "guitar_id": "'"${ID}"'"
+      "user_guitar_id": "'"${ID}"'"
     }
   }'
 

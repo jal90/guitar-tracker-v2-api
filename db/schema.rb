@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180823151932) do
+ActiveRecord::Schema.define(version: 20180823202844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,8 +47,8 @@ ActiveRecord::Schema.define(version: 20180823151932) do
     t.date "date_strings_changed"
     t.date "date_of_setup"
     t.string "setup_notes"
-    t.bigint "user_guitars_id"
-    t.index ["user_guitars_id"], name: "index_setups_on_user_guitars_id"
+    t.bigint "user_guitar_id"
+    t.index ["user_guitar_id"], name: "index_setups_on_user_guitar_id"
   end
 
   create_table "user_guitars", force: :cascade do |t|
@@ -66,10 +66,11 @@ ActiveRecord::Schema.define(version: 20180823151932) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 
   add_foreign_key "examples", "users"
-  add_foreign_key "setups", "user_guitars", column: "user_guitars_id"
+  add_foreign_key "setups", "user_guitars"
 end
