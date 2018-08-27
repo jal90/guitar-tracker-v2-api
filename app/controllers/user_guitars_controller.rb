@@ -25,23 +25,22 @@ class UserGuitarsController < ProtectedController
                            model: guitar_params['model'])
                     .first_or_initialize(guitar_params)
 
-    if @guitar.save
-      render json: @guitar, status: :created
+    # if @guitar.save
+    #   render json: @guitar, status: :created
+    # else
+    #   render json: @guitar.errors, status: :unprocessable_entity
+    # end
 
-      @user_guitar = current_user.user_guitars.build(guitar: @guitar,
-                                                     user: current_user,
-                                                     year: user_guitar_params['year'],
-                                                     price: user_guitar_params['price'])
+    @user_guitar = current_user.user_guitars.build(guitar: @guitar,
+                                                   user: current_user,
+                                                   year: user_guitar_params['year'],
+                                                   price: user_guitar_params['price'])
 
-      if @user_guitar.save
-        render json: @user_guitar, status: :created
-      else
-        render json: @user_guitar.errors, status: :unprocessable_entity
-      end
+    if @guitar.save && @user_guitar.save
+      render json: @user_guitar, status: :created
     else
-      render json: @guitar.errors, status: :unprocessable_entity
+      render json: @user_guitar.errors, status: :unprocessable_entity
     end
-
 
   end
 
@@ -61,6 +60,10 @@ class UserGuitarsController < ProtectedController
     @user_guitar.destroy
 
     head :no_content
+  end
+
+  def avg_price
+    p "AVERAGE IS #{UserGuitar.joins(:guitars)}"
   end
 
   def set_user_guitar
