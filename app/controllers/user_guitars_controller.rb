@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserGuitarsController < ProtectedController
-  before_action :set_user_guitar, only: %i[show update destroy]
+  before_action :set_user_guitar, only: %i[show update destroy avg_price]
 
   # GET /user_guitars
   # GET /user_guitars.json
@@ -31,6 +31,7 @@ class UserGuitarsController < ProtectedController
     #   render json: @guitar.errors, status: :unprocessable_entity
     # end
 
+    # TODO: look at set_user_guitar method. Change next line to @user_guitar.build?
     @user_guitar = current_user.user_guitars.build(guitar: @guitar,
                                                    user: current_user,
                                                    year: user_guitar_params['year'],
@@ -63,7 +64,12 @@ class UserGuitarsController < ProtectedController
   end
 
   def avg_price
-    p "AVERAGE IS #{UserGuitar.joins(:guitars)}"
+    @avg = @user_guitar.guitar.user_guitars.average(:price)
+    if @avg.is_a? BigDecimal
+      render json: @avg
+    else
+      render status: :unprocessable_entity
+    end
   end
 
   def set_user_guitar

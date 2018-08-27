@@ -1,9 +1,10 @@
 #!/bin/bash
 
-curl "http://localhost:4741/user_guitars/avg_price" \
+curl "http://localhost:4741/avg_price/${ID}" \
   --include \
   --request GET \
   --header "Content-Type: application/json" \
   --header "Authorization: Token token=${TOKEN}" \
+
 
 echo

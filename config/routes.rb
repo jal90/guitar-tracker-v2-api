@@ -14,5 +14,5 @@ Rails.application.routes.draw do
   post '/sign-in' => 'users#signin'
   delete '/sign-out' => 'users#signout'
   patch '/change-password' => 'users#changepw'
-  get '/user_guitars/avg_price' => 'user_guitars#avg_price'
+  get '/avg_price/:id' => 'user_guitars#avg_price'
 end
