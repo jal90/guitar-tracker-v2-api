@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserGuitarsController < ProtectedController
+  include ActionView::Helpers::NumberHelper
   before_action :set_user_guitar, only: %i[show update destroy avg_price]
 
   # GET /user_guitars
@@ -66,7 +67,7 @@ class UserGuitarsController < ProtectedController
   def avg_price
     @avg = @user_guitar.guitar.user_guitars.average(:price)
     if @avg.is_a? BigDecimal
-      render json: @avg
+      render json: number_to_currency(@avg)
     else
       render status: :unprocessable_entity
     end
