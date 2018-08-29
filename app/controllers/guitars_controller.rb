@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: rethink Guitar controller entirely. Since Guitar is now a resource that
-# is shared by many users, no one user (except perhaps an admin) should be able
-# to delete or modify any guitar entry.
 class GuitarsController < ProtectedController
   before_action :set_guitar, only: %i[show update destroy]
   before_action :check_admin_status, only: %i[update destroy]
