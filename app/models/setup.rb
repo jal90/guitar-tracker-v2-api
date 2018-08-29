@@ -1,6 +1,6 @@
 class Setup < ApplicationRecord
-  has_many :users, through: :guitars
-  belongs_to :guitar
+  belongs_to :user_guitar
+  belongs_to :user
 
   default_scope { order(created_at: :desc) }
 

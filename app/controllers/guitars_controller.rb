@@ -2,7 +2,7 @@
 
 class GuitarsController < ProtectedController
   before_action :set_guitar, only: %i[show update destroy]
-
+  before_action :check_admin_status, only: %i[update destroy]
   # GET /guitars
   # GET /guitars.json
   def index
@@ -20,7 +20,12 @@ class GuitarsController < ProtectedController
   # POST /guitars
   # POST /guitars.json
   def create
-    @guitar = current_user.guitars.build(guitar_params)
+    # @guitar = current_user.guitars.build(guitar_params)
+
+    # Transitioning Guitars into a public resource to reduce data duplication
+    # UserGuitars table will require current_user.user_guitars.build to ensure
+    # authentication
+    @guitar = Guitar.create(guitar_params)
 
     if @guitar.save
       render json: @guitar, status: :created
@@ -51,8 +56,12 @@ class GuitarsController < ProtectedController
     @guitar = current_user.guitars.find(params[:id])
   end
 
+  def check_admin_status
+    head :unauthorized unless current_user[:is_admin]
+  end
+
   def guitar_params
-    params.require(:guitar).permit(:make, :model, :year, :price)
+    params.require(:guitar).permit(:make, :model)
   end
 
   private :set_guitar, :guitar_params

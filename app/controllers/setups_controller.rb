@@ -7,7 +7,6 @@ class SetupsController < ProtectedController
   # GET /setups.json
   def index
     @setups = current_user.setups
-
     render json: @setups
   end
 
@@ -52,7 +51,7 @@ class SetupsController < ProtectedController
   end
 
   def setup_params
-    params.require(:setup).permit(:string_gauge, :guitar_id, :string_brand, :setup_notes, :date_strings_changed, :date_of_setup)
+    params.require(:setup).permit(:string_gauge, :user_guitar_id, :string_brand, :setup_notes, :date_strings_changed, :date_of_setup)
   end
 
   private :set_setup, :setup_params

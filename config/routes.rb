@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :examples, except: %i[new edit]
   resources :users, only: %i[index show update]
   resources :guitars, except: %i[new edit]
+  resources :user_guitars, except: %i[new edit]
   resources :setups, except: %i[new edit]
 
 
@@ -13,4 +14,5 @@ Rails.application.routes.draw do
   post '/sign-in' => 'users#signin'
   delete '/sign-out' => 'users#signout'
   patch '/change-password' => 'users#changepw'
+  get '/avg_price/:id' => 'user_guitars#avg_price'
 end
