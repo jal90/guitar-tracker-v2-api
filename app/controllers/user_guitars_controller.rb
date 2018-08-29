@@ -21,29 +21,21 @@ class UserGuitarsController < ProtectedController
   # POST /user_guitars
   # POST /user_guitars.json
   def create
-    # binding.pry
     @guitar = Guitar.where(make: guitar_params['make'],
                            model: guitar_params['model'])
                     .first_or_initialize(guitar_params)
 
-    # if @guitar.save
-    #   render json: @guitar, status: :created
-    # else
-    #   render json: @guitar.errors, status: :unprocessable_entity
-    # end
+    @user_guitar = current_user.user_guitars
+                               .build(guitar: @guitar,
+                                      user: current_user,
+                                      year: user_guitar_params['year'],
+                                      price: user_guitar_params['price'])
 
-    # TODO: look at set_user_guitar method. Change next line to @user_guitar.build?
-    @user_guitar = current_user.user_guitars.build(guitar: @guitar,
-                                                   user: current_user,
-                                                   year: user_guitar_params['year'],
-                                                   price: user_guitar_params['price'])
-
-    if @guitar.save && @user_guitar.save
+    UserGuitar.transaction do
+      @guitar.save!
+      @user_guitar.save!
       render json: @user_guitar, status: :created
-    else
-      render json: @user_guitar.errors, status: :unprocessable_entity
     end
-
   end
 
   # PATCH/PUT /user_guitars/1
